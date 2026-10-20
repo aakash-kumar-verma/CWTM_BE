@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { connectDB } from "./config/dbconnection.js";
-
+import { initCollections } from "./config/initCollections.js";
 import userRoutes from "./routes/userRoute.js";
 import authRoutes from "./routes/authRoutes.js";
 import { authenticateUser } from "./middleware/auth.js";
@@ -19,11 +19,20 @@ app.get("/", (_req, res) => {
     message: "WorkHub API is running",
   });
 });
-
+// Cache initialization within this server instance.
+let collectionsPromise: Promise<void> | null = null;
 // Ensure the database is connected before API routes run
 app.use(async (_req, res, next) => {
   try {
     await connectDB();
+    if (!collectionsPromise) {
+      collectionsPromise = initCollections().catch((error: unknown) => {
+        collectionsPromise = null;
+        throw error;
+      });
+    }
+
+    await collectionsPromise;
     next();
   } catch (error) {
     console.error("Database connection failed:", error);
