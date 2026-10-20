@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { User } from "../../model/user/User.js";
+import { User } from "../../model/User.ts";
 import {
   PASSWORD_REGEX,
   REGEX,

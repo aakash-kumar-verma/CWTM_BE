@@ -2,7 +2,7 @@
 import express, { Request, Response } from "express";
 import { registerUser, login } from "../controller/auth/auth.ts";
 import { authenticateUser } from "../middleware/auth.ts";
-import { User } from "../model/user/User.ts";
+import { User } from "../model/User.ts";
 const router = express.Router();
 
 // Public APIs
