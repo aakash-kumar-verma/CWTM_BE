@@ -11,6 +11,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Health check: does not require MongoDB
+app.get("/", (_req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "WorkHub API is running",
+  });
+});
+
+// Ensure the database is connected before API routes run
 app.use(async (_req, res, next) => {
   try {
     await connectDB();
@@ -23,12 +33,6 @@ app.use(async (_req, res, next) => {
       message: "Database unavailable",
     });
   }
-});
-app.get("/", (_req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "WorkHub API is running",
-  });
 });
 
 app.use("/api/auth", authRoutes);

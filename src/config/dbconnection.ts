@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { env } from "../env.js";
 
 let connectionPromise: Promise<typeof mongoose> | null = null;
 
@@ -9,8 +10,8 @@ export async function connectDB() {
 
   if (!connectionPromise) {
     connectionPromise = mongoose
-      .connect(process.env.MONGO_URL!)
-      .catch((error) => {
+      .connect(env.MONGO_URL)
+      .catch((error: unknown) => {
         connectionPromise = null;
         throw error;
       });
