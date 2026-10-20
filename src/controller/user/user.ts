@@ -11,9 +11,15 @@ export const getUserDetails = async (req: Request, resp: Response) => {
       const userData = await User.find();
       resp.status(200).send(userData);
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.log({ error });
-    resp.status(500).send(error._message);
+    const message =
+      error instanceof Error ? error.message : "An unexpected error occurred";
+
+    return resp.status(500).json({
+      success: false,
+      message,
+    });
   }
 };
 export const addUserDetails = async (req: Request, resp: Response) => {
@@ -21,9 +27,15 @@ export const addUserDetails = async (req: Request, resp: Response) => {
     const { name, password, email } = req.body;
     const result = await User.create({ name, email, password });
     resp.status(200).send(result);
-  } catch (error) {
-    console.log(error);
-    resp.status(500).send(error._message);
+  } catch (error: unknown) {
+    console.log({ error });
+    const message =
+      error instanceof Error ? error.message : "An unexpected error occurred";
+
+    return resp.status(500).json({
+      success: false,
+      message,
+    });
   }
 };
 
@@ -39,8 +51,14 @@ export const deleteUserDetails = async (req: Request, resp: Response) => {
     } else {
       resp.status(500).send("User not found");
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.log({ error });
-    resp.status(500).send(error._message);
+    const message =
+      error instanceof Error ? error.message : "An unexpected error occurred";
+
+    return resp.status(500).json({
+      success: false,
+      message,
+    });
   }
 };

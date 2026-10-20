@@ -1,5 +1,11 @@
+import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-export const authenticateUser = (req, res, next) => {
+import { env } from "../env.ts";
+export const authenticateUser = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const authHeader = req.headers.authorization;
 
@@ -18,9 +24,23 @@ export const authenticateUser = (req, res, next) => {
       });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET, {
+    const decoded = jwt.verify(token, env.JWT_SECRET, {
       algorithms: ["HS256"],
     });
+
+    // JWT payload can be a string or an object
+    if (typeof decoded === "string") {
+      return res.status(401).json({
+        message: "Invalid token payload",
+      });
+    }
+
+    // Validate required claims
+    if (typeof decoded.sub !== "string" || typeof decoded.email !== "string") {
+      return res.status(401).json({
+        message: "Invalid token payload",
+      });
+    }
 
     // Attach verified identity to the request.
     req.user = {
@@ -29,19 +49,15 @@ export const authenticateUser = (req, res, next) => {
     };
 
     next();
-  } catch (error) {
-    if (
-      error.name === "TokenExpiredError" ||
-      error.name === "JsonWebTokenError" ||
-      error.name === "NotBeforeError"
-    ) {
-      return res.status(401).json({
-        message: "Invalid or expired token",
-      });
-    }
+  } catch (error: unknown) {
+    console.error(error);
+
+    const message =
+      error instanceof Error ? error.message : "An unexpected error occurred";
 
     return res.status(500).json({
-      message: "Internal server error",
+      success: false,
+      message,
     });
   }
 };

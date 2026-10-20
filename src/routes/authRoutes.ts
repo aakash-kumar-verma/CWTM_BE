@@ -11,7 +11,7 @@ router.post("/login", login);
 // Protected API: only logged-in users
 router.get("/me", authenticateUser, async (req: Request, res: Response) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user?.id);
 
     if (!user) {
       return res.status(404).json({
