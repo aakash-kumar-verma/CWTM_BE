@@ -1,3 +1,4 @@
+/// <reference path="../types/express.d.ts" />
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { env } from "../env.ts";
@@ -47,7 +48,6 @@ export const authenticateUser = (
       id: decoded.sub,
       email: decoded.email,
     };
-
     next();
   } catch (error: unknown) {
     console.error(error);
