@@ -1,9 +1,9 @@
 import "./src/env.js";
 import express from "express";
-import "./config/dbconnection.js";
+import "./src/config/dbconnection.js";
 
-import userRoutes from "./routes/userRoute.js";
-import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./src/routes/userRoute.js";
+import authRoutes from "./src/routes/authRoutes.js";
 import { authenticateUser } from "./src/middleware/auth.js";
 import { env } from "./src/env.js";
 

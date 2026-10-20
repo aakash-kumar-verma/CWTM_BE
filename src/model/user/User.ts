@@ -16,6 +16,20 @@ const userSchema = new Schema(
       required: true,
       select: false,
     },
+    status: {
+      type: String,
+      enum: ["active", "disabled", "pending_verification"],
+      required: true,
+      default: "pending_verification",
+    },
+    emailVerifiedAt: {
+      type: Date,
+      required: false,
+    },
+    lastLoginAt: {
+      type: Date,
+      required: false,
+    },
   },
   { timestamps: true },
 );

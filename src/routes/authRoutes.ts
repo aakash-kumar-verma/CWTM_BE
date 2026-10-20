@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
-import { registerUser, login } from "../src/controller/auth/auth.ts";
-import { authenticateUser } from "../src/middleware/auth.ts";
-import { User } from "../src/model/user/User.js";
+import { registerUser, login } from "../controller/auth/auth.ts";
+import { authenticateUser } from "../middleware/auth.ts";
+import { User } from "../model/user/User.ts";
 const router = express.Router();
 
 // Public APIs
