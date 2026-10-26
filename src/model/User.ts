@@ -13,7 +13,10 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: function (this: any) {
+        // Password is required only for non-Google accounts
+        return !this.googleId;
+      },
       select: false,
     },
     status: {
@@ -29,6 +32,16 @@ const userSchema = new Schema(
     lastLoginAt: {
       type: Date,
       required: false,
+    },
+    googleId: {
+      type: String,
+      unique: true,
+      sparse: true,
+      default: null,
+    },
+    profileImage: {
+      type: String,
+      default: "",
     },
   },
   { timestamps: true },

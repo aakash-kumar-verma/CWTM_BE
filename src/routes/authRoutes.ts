@@ -1,13 +1,22 @@
 /// <reference path="../types/express.d.ts" />
 import express, { Request, Response } from "express";
-import { registerUser, login } from "../controller/auth/auth.ts";
+import { registerUser, login, logout } from "../controller/auth/auth.ts";
 import { authenticateUser } from "../middleware/auth.ts";
 import { User } from "../model/User.ts";
+import {
+  googleCallback,
+  googleLogin,
+} from "../controller/auth/googleAuthController.ts";
 const router = express.Router();
 
 // Public APIs
 router.post("/register", registerUser);
 router.post("/login", login);
+router.post("/logout", logout);
+
+// Google OAuth routes
+router.get("/google", googleLogin);
+router.get("/google/callback", googleCallback);
 
 // Protected API: only logged-in users
 router.get("/me", authenticateUser, async (req: Request, res: Response) => {

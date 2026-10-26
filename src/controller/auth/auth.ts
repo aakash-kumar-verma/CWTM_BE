@@ -86,6 +86,13 @@ const login = async (req: Request, resp: Response) => {
         algorithm: "HS256",
       },
     );
+    resp.cookie("accessToken", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 15 * 60 * 1000,
+    });
 
     return resp.status(200).send({
       message: "login successfully",
@@ -102,4 +109,17 @@ const login = async (req: Request, resp: Response) => {
   }
 };
 
-export { login, registerUser };
+const logout = (_req: Request, res: Response) => {
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+  });
+
+  return res.status(200).json({
+    message: "Logged out successfully",
+  });
+};
+
+export { login, registerUser, logout };

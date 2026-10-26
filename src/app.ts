@@ -5,10 +5,19 @@ import { initCollections } from "./config/initCollections.js";
 import userRoutes from "./routes/userRoute.js";
 import authRoutes from "./routes/authRoutes.js";
 import { authenticateUser } from "./middleware/auth.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "http://192.168.29.175:3000"],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -43,7 +52,7 @@ app.use(async (_req, res, next) => {
     });
   }
 });
-
+app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/", authenticateUser, userRoutes);
 
