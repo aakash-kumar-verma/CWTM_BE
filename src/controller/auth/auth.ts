@@ -68,9 +68,24 @@ const login = async (req: Request, resp: Response) => {
     if (!isUserExist) {
       return resp.status(401).send({ message: "Invalid Email or password" });
     }
-    const { _id, email: userEmail, name, password: userPassword } = isUserExist;
+
+    const userPassword = isUserExist.password;
+
+    if (!userPassword) {
+      return resp.status(401).send({
+        message: "Invalid email or password",
+      });
+    }
 
     const isPasswordValid = await bcrypt.compare(password, userPassword);
+
+    if (!isPasswordValid) {
+      return resp.status(401).send({
+        message: "Invalid email or password",
+      });
+    }
+
+    const { _id, email: userEmail, name } = isUserExist;
 
     if (!isPasswordValid) {
       return resp.status(401).send({ message: "Invalid email or password" });
