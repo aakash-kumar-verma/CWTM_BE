@@ -101,13 +101,6 @@ const login = async (req: Request, resp: Response) => {
         algorithm: "HS256",
       },
     );
-    resp.cookie("accessToken", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      maxAge: 15 * 60 * 1000,
-    });
 
     return resp.status(200).send({
       message: "login successfully",
